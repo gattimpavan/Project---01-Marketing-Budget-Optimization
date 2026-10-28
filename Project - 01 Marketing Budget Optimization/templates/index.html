@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-driven marketing budget optimization dashboard analyzing multi-touch attribution, customer unit economics, and diminishing marginal returns.">
+    <title>Project - 01: Marketing Budget Optimization | AI Decision Intelligence</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Plotly.js for Interactive Charts -->
+    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav" id="top-nav">
+            <div class="brand-group">
+                <div class="logo-badge pg-logo-badge">
+                    <span class="pg-text">P&G</span>
+                </div>
+                <div>
+                    <h1 class="main-title">Project - 01: Marketing Budget Optimization</h1>
+                    <p class="subtitle">Procter & Gamble (P&G) &bull; AI-Driven Multi-Touch Attribution & Retail Media Reallocation</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <div class="system-status-pill">
+                    <span class="status-dot"></span>
+                    <span>AI Solver: SLSQP Optimal</span>
+                </div>
+                <a href="/api/download-pdf" class="btn-primary" id="btn-download-pdf">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                    </svg>
+                    <span>Download P&G Executive PDF</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Problem Statement Banner -->
+        <section class="problem-statement-card">
+            <div class="problem-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>Procter & Gamble (P&G) &bull; Case Study Problem Statement</span>
+            </div>
+            <p class="problem-quote">
+                "Procter & Gamble (P&G) is spending heavily across multiple digital and retail marketing channels ($12,000,000 monthly deployment across Tide, Pampers, Gillette, Oral-B, Olay, and Pantene), but brand leadership cannot determine which campaigns generate profitable, repeat consumer households versus one-off deal switchers. Develop an AI-driven system that analyzes campaign, consumer cohort, retail conversion, and revenue data to identify inefficient spending, estimate campaign effectiveness, and recommend how P&G's marketing budget should be reallocated across retail media, digital video, search, and direct loyalty CRM."
+            </p>
+        </section>
+
+        <!-- Executive KPI Cards -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-label">Current Monthly Budget</span>
+                    <span class="kpi-icon icon-budget">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </span>
+                </div>
+                <div class="kpi-value" id="kpi-current-spend">$12,000,000</div>
+                <div class="kpi-footer">
+                    <span class="badge-neutral">8 P&G Channels</span>
+                    <span class="kpi-subtext">Baseline capital</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-label">Current Revenue & ROAS</span>
+                    <span class="kpi-icon icon-rev">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/></svg>
+                    </span>
+                </div>
+                <div class="kpi-value" id="kpi-current-rev">$16,559,859</div>
+                <div class="kpi-footer">
+                    <span class="badge-neutral" id="kpi-current-roas">1.38x ROAS</span>
+                    <span class="kpi-subtext">Baseline trade sales</span>
+                </div>
+            </div>
+
+            <div class="kpi-card glow-card-success">
+                <div class="kpi-header">
+                    <span class="kpi-label">Projected Optimized Revenue</span>
+                    <span class="kpi-icon icon-opt">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                    </span>
+                </div>
+                <div class="kpi-value highlight-success" id="kpi-proj-rev">$17,399,714</div>
+                <div class="kpi-footer">
+                    <span class="badge-success" id="kpi-uplift">+5.1% (+ $839.8k/mo)</span>
+                    <span class="kpi-subtext">With $0 Budget Increase</span>
+                </div>
+            </div>
+
+            <div class="kpi-card glow-card-cyan">
+                <div class="kpi-header">
+                    <span class="kpi-label">Optimized Blended ROAS</span>
+                    <span class="kpi-icon icon-roas">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+                    </span>
+                </div>
+                <div class="kpi-value highlight-cyan" id="kpi-proj-roas">1.45x</div>
+                <div class="kpi-footer">
+                    <span class="badge-cyan" id="kpi-roas-gain">+0.07x Efficiency Lift</span>
+                    <span class="kpi-subtext">Convex Pareto frontier</span>
+                </div>
+            </div>
+
+            <div class="kpi-card glow-card-danger">
+                <div class="kpi-header">
+                    <span class="kpi-label">Inefficient Spend Liquidated</span>
+                    <span class="kpi-icon icon-danger">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </span>
+                </div>
+                <div class="kpi-value highlight-danger" id="kpi-waste">$1,040,750</div>
+                <div class="kpi-footer">
+                    <span class="badge-danger" id="kpi-waste-pct">8.7% Portfolio Waste</span>
+                    <span class="kpi-subtext">Bleeding in Open-Web Display</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive AI Budget Simulator Controls -->
+        <section class="simulator-card">
+            <div class="simulator-header">
+                <div class="sim-title-group">
+                    <div class="sim-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                            <rect x="9" y="9" width="6" height="6"></rect>
+                            <line x1="9" y1="1" x2="9" y2="4"></line>
+                            <line x1="15" y1="1" x2="15" y2="4"></line>
+                            <line x1="9" y1="20" x2="9" y2="23"></line>
+                            <line x1="15" y1="20" x2="15" y2="23"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2>P&G Interactive AI Budget Reallocation Simulator</h2>
+                        <p class="sim-desc">Simulate monthly digital & retail media budget shifts for Tide, Pampers, Gillette, Oral-B, and Olay.</p>
+                    </div>
+                </div>
+
+                <div class="sim-actions">
+                    <button class="btn-secondary" id="btn-reset-sim">Reset to Baseline ($12M)</button>
+                    <button class="btn-primary" id="btn-run-sim">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <span>Recompute Allocation</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="simulator-controls-grid">
+                <!-- Slider Control -->
+                <div class="control-box">
+                    <div class="control-label-row">
+                        <label for="budget-slider" class="control-label">Total Monthly P&G Budget</label>
+                        <span class="slider-val-badge" id="slider-val-display">$12,000,000</span>
+                    </div>
+                    <input type="range" id="budget-slider" min="6000000" max="20000000" step="500000" value="12000000" class="custom-range">
+                    <div class="slider-ticks">
+                        <button class="tick-btn" data-val="9000000">-25% ($9.0M)</button>
+                        <button class="tick-btn active" data-val="12000000">Current ($12.0M)</button>
+                        <button class="tick-btn" data-val="15000000">+25% ($15.0M)</button>
+                        <button class="tick-btn" data-val="18000000">+50% ($18.0M)</button>
+                    </div>
+                </div>
+
+                <!-- Strategy Selector -->
+                <div class="control-box">
+                    <label class="control-label">Optimization Strategy Objective</label>
+                    <div class="strategy-options">
+                        <label class="strategy-radio">
+                            <input type="radio" name="opt-strategy" value="profit_maximization" checked>
+                            <div class="strategy-card">
+                                <span class="strat-title">Profit Maximization</span>
+                                <span class="strat-desc">Maximizes Net Contribution Margin (Revenue × Gross Margin - Spend)</span>
+                            </div>
+                        </label>
+                        <label class="strategy-radio">
+                            <input type="radio" name="opt-strategy" value="revenue_maximization">
+                            <div class="strategy-card">
+                                <span class="strat-title">Aggressive Revenue Scale</span>
+                                <span class="strat-desc">Maximizes top-line gross revenue across scalable response curves</span>
+                            </div>
+                        </label>
+                        <label class="strategy-radio">
+                            <input type="radio" name="opt-strategy" value="balanced_growth">
+                            <div class="strategy-card">
+                                <span class="strat-title">Balanced Risk Control</span>
+                                <span class="strat-desc">Limits concentration risk while cutting bleeding channels</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Tabs -->
+        <section class="tabs-container">
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="tab-reallocation">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+                    <span>Budget Reallocation Matrix</span>
+                </button>
+                <button class="tab-btn" data-tab="tab-economics">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>Unit Economics & Inefficiency Audit</span>
+                </button>
+                <button class="tab-btn" data-tab="tab-attribution">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    <span>Multi-Touch Attribution</span>
+                </button>
+                <button class="tab-btn" data-tab="tab-curves">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                    <span>Response & Saturation Curves</span>
+                </button>
+                <button class="tab-btn" data-tab="tab-journeys">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <span>Customer Conversion Journeys</span>
+                </button>
+                <button class="tab-btn" data-tab="tab-governance">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Strategic Roadmap & Governance</span>
+                </button>
+            </div>
+
+            <!-- Tab 1: Budget Reallocation Matrix -->
+            <div class="tab-pane active" id="tab-reallocation">
+                <div class="chart-and-table-grid">
+                    <div class="card-chart">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Spend Allocation Shift: Current vs Recommended</h3>
+                                <p class="chart-sub">Capital redeployed away from bleeding channels into high-ROAS scalable tiers</p>
+                            </div>
+                        </div>
+                        <div id="chart-reallocation" class="chart-container"></div>
+                    </div>
+
+                    <div class="card-chart">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Projected Revenue Uplift by Channel</h3>
+                                <p class="chart-sub">Incremental revenue generated by shifting capital to high marginal return channels</p>
+                            </div>
+                        </div>
+                        <div id="chart-revenue-uplift" class="chart-container"></div>
+                    </div>
+                </div>
+
+                <!-- Reallocation Table -->
+                <div class="data-table-wrapper">
+                    <div class="table-header-title">
+                        <h3>Channel Spend Reallocation & Performance Blueprint</h3>
+                        <span class="badge-neutral" id="solver-status-badge">SLSQP Optimization Converged</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-reallocation">
+                            <thead>
+                                <tr>
+                                    <th>Marketing Channel</th>
+                                    <th>Efficiency Tier</th>
+                                    <th>Current Spend</th>
+                                    <th>Recommended Spend</th>
+                                    <th>Spend Delta ($ / %)</th>
+                                    <th>Current ROAS</th>
+                                    <th>Projected ROAS</th>
+                                    <th>Projected Revenue</th>
+                                    <th>AI Recommended Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-reallocation">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Unit Economics & Inefficiency Audit -->
+            <div class="tab-pane" id="tab-economics">
+                <div class="chart-and-table-grid">
+                    <div class="card-chart">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Customer Unit Economics: LTV to CAC Ratio</h3>
+                                <p class="chart-sub">Benchmark: &gt; 3.0x Healthy, 2.0x - 3.0x Moderate, &lt; 1.5x Inefficient Bleed</p>
+                            </div>
+                        </div>
+                        <div id="chart-ltv-cac" class="chart-container"></div>
+                    </div>
+
+                    <div class="card-chart">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Payback Velocity vs Customer Churn Rate</h3>
+                                <p class="chart-sub">Highlights high-churn low-LTV channels destroying capital</p>
+                            </div>
+                        </div>
+                        <div id="chart-churn-payback" class="chart-container"></div>
+                    </div>
+                </div>
+
+                <!-- Economics Audit Table -->
+                <div class="data-table-wrapper">
+                    <div class="table-header-title">
+                        <h3>Customer Quality & Inefficient Spending Diagnostic</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-economics">
+                            <thead>
+                                <tr>
+                                    <th>Channel</th>
+                                    <th>CAC ($)</th>
+                                    <th>Average LTV ($)</th>
+                                    <th>LTV : CAC</th>
+                                    <th>Profitable Cust %</th>
+                                    <th>Churn Rate %</th>
+                                    <th>Payback (Months)</th>
+                                    <th>Inefficient Spend Wasted</th>
+                                    <th>Primary Root Cause</th>
+                                    <th>Efficiency Health Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-economics">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Multi-Touch Attribution -->
+            <div class="tab-pane" id="tab-attribution">
+                <div class="info-callout">
+                    <div class="info-callout-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    </div>
+                    <div>
+                        <h4>Why Single-Touch Attribution Fails Management</h4>
+                        <p>Last-Touch attribution artificially credits lower-funnel channels while obscuring discovery channels (YouTube, Meta Prospecting) that initiate customer intent. Our Markov Chain model calculates removal effects across 5,000 real conversion paths to uncover true incremental credit.</p>
+                    </div>
+                </div>
+
+                <div class="card-chart full-width">
+                    <div class="chart-header">
+                        <div>
+                            <h3>Attribution Model Comparison: Revenue Share (%)</h3>
+                            <p class="chart-sub">Contrasting First-Touch, Last-Touch, Linear, and Markov Data-Driven Models</p>
+                        </div>
+                    </div>
+                    <div id="chart-attribution-comp" class="chart-container large"></div>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <div class="table-header-title">
+                        <h3>Attribution Attribution Comparison Data</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-attribution">
+                            <thead>
+                                <tr>
+                                    <th>Marketing Channel</th>
+                                    <th>First-Touch Share (%)</th>
+                                    <th>Last-Touch Share (%)</th>
+                                    <th>Linear Share (%)</th>
+                                    <th>Markov Data-Driven Share (%)</th>
+                                    <th>Attribution Bias Assessment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-attribution">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Response & Saturation Curves -->
+            <div class="tab-pane" id="tab-curves">
+                <div class="card-chart full-width">
+                    <div class="chart-header flex-between">
+                        <div>
+                            <h3>Non-Linear Saturation Response Curves: Revenue vs Spend</h3>
+                            <p class="chart-sub">Visualizing Hill saturation curves, current operating point, and optimal allocation point</p>
+                        </div>
+                        <div class="channel-select-wrapper">
+                            <label for="curve-channel-select">Select P&amp;G Channel:</label>
+                            <select id="curve-channel-select" class="custom-select">
+                                <option value="ALL">All P&amp;G Channels Overlay</option>
+                                <option value="Amazon Ads (Retail Media)">Amazon Ads (Retail Media)</option>
+                                <option value="Walmart Connect & Retail Media">Walmart Connect & Retail Media</option>
+                                <option value="Google Shopping & Search">Google Shopping & Search</option>
+                                <option value="Meta Social (IG / FB Reels)">Meta Social (IG / FB Reels)</option>
+                                <option value="Connected TV & YouTube Video">Connected TV & YouTube Video</option>
+                                <option value="P&G Good Everyday Rewards CRM">P&G Good Everyday Rewards CRM</option>
+                                <option value="TikTok Creator & Influencer">TikTok Creator & Influencer</option>
+                                <option value="Programmatic Open-Web Display">Programmatic Open-Web Display</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="chart-response-curves" class="chart-container large"></div>
+                </div>
+
+                <!-- Marginal ROAS matrix -->
+                <div class="data-table-wrapper">
+                    <div class="table-header-title">
+                        <h3>Marginal ROAS & Elasticity Analysis</h3>
+                        <p class="table-sub">Marginal ROAS = dRevenue / dSpend. When marginal ROAS &lt; 1.0, every additional marketing dollar spent destroys brand margin.</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-marginal">
+                            <thead>
+                                <tr>
+                                    <th>P&amp;G Channel</th>
+                                    <th>Current Spend</th>
+                                    <th>Average Historical ROAS</th>
+                                    <th>Current Marginal ROAS</th>
+                                    <th>Saturation Zone</th>
+                                    <th>AI Elasticity Recommendation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-marginal">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Customer Journeys -->
+            <div class="tab-pane" id="tab-journeys">
+                <div class="data-table-wrapper">
+                    <div class="table-header-title">
+                        <h3>P&amp;G Consumer Household Conversion Journeys (Sample Audit)</h3>
+                        <p class="table-sub">Live audit trail showing household touchpoint paths across Tide, Pampers, Gillette, Oral-B, and Olay, tracking acquisition costs, 12-month LTV, and repeat purchase profitability.</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-journeys">
+                            <thead>
+                                <tr>
+                                    <th>Household ID</th>
+                                    <th>P&amp;G Brand Portfolio</th>
+                                    <th>First Touchpoint</th>
+                                    <th>Last Touchpoint</th>
+                                    <th>Full Multi-Touch Path</th>
+                                    <th>Touchpoints</th>
+                                    <th>12M LTV ($)</th>
+                                    <th>CAC ($)</th>
+                                    <th>Net Contribution ($)</th>
+                                    <th>Payback</th>
+                                    <th>Household Health</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-journeys">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 6: Strategic Roadmap & Governance -->
+            <div class="tab-pane" id="tab-governance">
+                <div class="roadmap-grid">
+                    <div class="roadmap-card">
+                        <div class="roadmap-header">
+                            <span class="step-badge">Phase 1: Week 1 - 2</span>
+                            <h4>Immediate Bleed Defunding</h4>
+                        </div>
+                        <ul class="roadmap-list">
+                            <li><strong>Defund Programmatic Display:</strong> Slashing monthly budget from $85k to $25k immediately halts a negative ROI drain.</li>
+                            <li><strong>Cap TikTok Prospecting:</strong> Restrict TikTok to strict lookalike audiences; eliminate broad demographic bleed.</li>
+                            <li><strong>Purge Affiliate Low-Quality Placements:</strong> Review publisher conversion logs to remove coupon scraper arbitrage.</li>
+                            <li><strong>Expected Savings:</strong> <em>$80,000 / month</em> in wasted capital reclaimed.</li>
+                        </ul>
+                    </div>
+
+                    <div class="roadmap-card">
+                        <div class="roadmap-header">
+                            <span class="step-badge step-growth">Phase 2: Week 3 - 6</span>
+                            <h4>Scale High-Elasticity Channels</h4>
+                        </div>
+                        <ul class="roadmap-list">
+                            <li><strong>Scale Google Search (+ $45,000/mo):</strong> High intent capture with strong payback (&lt; 2.2 months) and high LTV ($1,450).</li>
+                            <li><strong>Scale LinkedIn B2B (+ $25,000/mo):</strong> Premium enterprise customer segment yielding $2,400+ LTV and 4.2x LTV:CAC.</li>
+                            <li><strong>Expand Automated Email Retargeting (+ $10,000/mo):</strong> Highest ROAS engine (3.13x) with minimal CAC.</li>
+                            <li><strong>Projected Revenue Uplift:</strong> <em>+ $93,800 / month</em> (+ $1.12M annualized).</li>
+                        </ul>
+                    </div>
+
+                    <div class="roadmap-card">
+                        <div class="roadmap-header">
+                            <span class="step-badge step-ai">Phase 3: Ongoing</span>
+                            <h4>Autonomous AI Governance</h4>
+                        </div>
+                        <ul class="roadmap-list">
+                            <li><strong>Automated Weekly SLSQP Solvers:</strong> System recalibrates channel allocations weekly as conversion data flows in.</li>
+                            <li><strong>Dynamic Marginal ROAS Guardrails:</strong> Trigger auto-throttling whenever a channel's marginal ROAS falls below 1.15x.</li>
+                            <li><strong>LTV:CAC Safety Circuit Breakers:</strong> Any campaign with LTV:CAC &lt; 1.8x over 30 days is automatically paused for review.</li>
+                            <li><strong>Executive PDF Generation:</strong> Automated monthly PDF briefing delivery to C-suite leadership.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="download-banner-card">
+                    <div class="download-content">
+                        <h3>Need the Complete Executive Briefing in PDF Format?</h3>
+                        <p>Generate and download the publication-grade 3-page executive report complete with high-resolution charts, unit economics audit tables, and mathematical formulation.</p>
+                    </div>
+                    <a href="/api/download-pdf" class="btn-primary btn-large">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                        <span>Download Executive PDF Report</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p><strong>Project - 01: Marketing Budget Optimization</strong> &bull; AI Agents & Autonomous Business Operations &bull; Trimester 4</p>
+            <p class="footer-meta">Powered by Python, SciPy SLSQP Solver, Markov Attribution Modeling, and Modern Web Intelligence.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
